@@ -4,11 +4,12 @@ rotateAtt = ['RotateX', 'RotateY', 'RotateZ']
 transAtt = ['TranslateX', 'TranslateY', 'TranslateZ']
 scaleAtt = ['ScaleX', 'ScaleY', 'ScaleZ']
 
+#colours = {'Red': 0, 'Blue': 0, 'Green': 0, 'Purple': 0.551 0 0.336679}
+
 removeTranslate = False
 removeRotate = False
 removeScale = False 
 
-value = 0
 
 #grab everything within Maya
 allScene = cmds.ls()
@@ -24,6 +25,7 @@ nurbsTransformDuplicateList = []
 
 # go through nurbs variable and interate and add to the nurbsTransformDuplicateList array
 for shape in nurbs:
+    
     nurbsTransformDuplicateList.append(cmds.listRelatives(shape, parent=True)[0])
 
 
@@ -34,47 +36,39 @@ print len(nurbsTransformDuplicateList)
 nurbsTransList = set(nurbsTransformDuplicateList)
 
 
-for i in nurbsTransList:
+for controllerName in nurbsTransList:
 
-    #get all attribute which are visible to the user and are also keyable
-    transformAttr = cmds.listAttr(i,visible=True, keyable=True, scalar=True, unlocked=True)
-    print transformAttr
-    
     #store all source nurb connections in connectionNurb
-    connectionNurb =[]
-    lengthAttr = len(transformAttr)
+    editTrans =[]
+    nurbsConnection = []
     
-    #grab the name of the object currently selected and list all connecting within the node editor and be sure to only grab the source
+    #get all attribute which are visible to the user and are also keyable
+    AllControlsWithAndWithoutKeyable = cmds.listAttr(controllerName,visible=True, keyable=True, scalar=True, unlocked=True)
     
-    #while value != lengthAttr:
-        #connectionNurb.append(cmds.listConnections(lengthAttr[value],source=True, type='animCurveTA'))
-        #value = value + 1
-    
-   
-'''    
-   
-    #connectionNurb.append(cmds.listConnections(i,source=True, type='animCurveTL' or 'animCurveTU' or 'animCurveTA')) 
-
-    
-   
-    if connectionNurb[0] is not None:
+    #check to see if if controllers have keys which can be used by animators
+    if AllControlsWithAndWithoutKeyable == None or len(AllControlsWithAndWithoutKeyable) == 0:
         
-    
-        for x in connectionNurb[0]:
-            print x
-            
-            cmds.setAttr(x+".useCurveColor",1)
-            
-            attributeName = cmds.listConnections(x,plugs=True)
-            
-            
-            
-            if '.rotate' in attributeName[0]:
-                print attributeName
-            
-      '''      
+        #print 'Non-Keyable', controllerName
+        pass
+    else:
 
+        editTrans.append(controllerName)
+        #print 'name of Keyable: ',editTrans, 'Amount of Controls: ', len(AllControlsWithAndWithoutKeyable)
 
+    #if editrans is not empty get all animCurve types 
+    if len(editTrans) != 0:
+        
+        #grab all connections which have a similar name to animCurve* 
+        connections = cmds.listConnections(editTrans,source=True, type='animCurve')
+        
+        if connections == None:
+            pass
+        else:
+            print 'name', controllerName, 'name of connections', connections
 
+            for individualCurves in connections:
 
-
+                #Enable the attribute to be true so the grapgh editor can be altered colour
+                cmds.setAttr(individualCurves+".useCurveColor",1)
+                cmds.setAttr(individualCurves+"")
+                attributeName = cmds.listConnections(individualCurves,plugs=True)
