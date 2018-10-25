@@ -69,6 +69,7 @@ for controllerName in nurbsTransList:
             for individualCurves in connections:
 
                 #Enable the attribute to be true so the grapgh editor can be altered colour
-                cmds.setAttr(individualCurves+".useCurveColor",1)
-                cmds.setAttr(individualCurves+"")
-                attributeName = cmds.listConnections(individualCurves,plugs=True)
+                cmds.setAttr(individualCurves+".useCurveColor",0)
+                #print 'individualCurves', individualCurves
+                #cmds.setAttr(individualCurves+".curveColor", 1.0, 1.0, 0.0, type='double3')
+                #attributeName = cmds.listConnections(individualCurves,plugs=True)
