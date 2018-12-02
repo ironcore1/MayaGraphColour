@@ -1,7 +1,5 @@
 import maya.cmds as cmds
 
-#colours = {'Red': 0, 'Blue': 0, 'Green': 0, 'Purple': 0.551 0 0.336679}
-
 removeTranslate = False
 removeRotate = False
 removeScale = False
@@ -33,7 +31,7 @@ nurbsTransList = set(nurbsTransformDuplicateList)
 print 'Number of controls:', len(nurbsTransList)
 
 #store all source nurb connections in connectionNurb
-editTrans =[]
+controllerNameList =[]
 
 for controllerName in nurbsTransList:
 
@@ -48,40 +46,67 @@ for controllerName in nurbsTransList:
         pass
     else:
         #print 'this is keyable', controllerName, 'number', len(AllControlsWithAndWithoutKeyable)
-        editTrans.append(controllerName)
+        controllerNameList.append(controllerName)
 
 
 
-for eachControl in editTrans:
+for eachControl in controllerNameList:
 
-    nurbsConnection = []
+
     #if eachControl is not empty get all animCurve types
     if len(eachControl) != 0:
 
-        #grab all connections which have a similar name to animCurve*
-        eachControlsConnections = cmds.listConnections(eachControl, destination=True, type='animCurve')
+        #check and see if it is connected to a characterSet Node
 
-        print 'Control name ',eachControl, 'ITS CONNECTIONS ', eachControlsConnections
+        characterNodesNotSet = cmds.listConnections(eachControl, source=True, type='character')
+        characterNodesSetRemoved = set(characterNodesNotSet)
+        characterNodes = list(characterNodesSetRemoved)
+        charType = cmds.nodeType(characterNodes)
+        print type(charType)
+
+        if cmds.nodeType(characterNodes) == 'character':
 
 
-#if editrans is not empty get all animCurve types
-#if len(editTrans) != 0:
+            #get connections of the controller of a character type
+            connections = cmds.listConnections(eachControl, source=True, type='character')
 
-    #grab all connections which have a similar name to animCurve*
-    connections = cmds.listConnections(editTrans, destination=True)
-    #print 'this is the name', editTrans, 'these are the connections', connections
+            #remove duplicate names in the list of connections
+            setConnections = set(connections)
 
-    '''
-    if connections == None:
-        pass
-    else:
-        #print 'name', controllerName, 'name of connections', connections
+            #turn it back into a list so it can be itteratred upon
+            listedConnections = list(setConnections)
 
-        for individualCurves in connections:
+            #look through each character type node
+            for eachCharacterSet in listedConnections:
 
-            #Enable the attribute to be true so the grapgh editor can be altered colour
-            cmds.setAttr(individualCurves+".useCurveColor", 1)
-            #print 'individualCurves', individualCurves
-            cmds.setAttr(individualCurves+".curveColor", 1.0, 0.0, 0.0, type='double3')
-    '''
+                finalConnections = cmds.listConnections(eachCharacterSet, source=True, type='animCurve')
+
+                if finalConnections == None:
+                    pass
+                else:
+                    for individualCurves in finalConnections:
+
+                        #Enable the attribute to be true so the grapgh editor can be altered colour
+                        cmds.setAttr(individualCurves+".useCurveColor", 1)
+                        #print 'individualCurves', individualCurves
+                        cmds.setAttr(individualCurves+".curveColor", 1.0, 0.0, 0.0, type='double3')
+                        print 'it works on', eachControl
+            else:
+                for eachCharacterSet in listedConnections:
+
+                    finalConnections = cmds.listConnections(eachCharacterSet, source=True, type='animCurve')
+
+                if finalConnections == None:
+                    pass
+                else:
+                    for individualCurves in finalConnections:
+
+                        #Enable the attribute to be true so the grapgh editor can be altered colour
+                        cmds.setAttr(individualCurves+".useCurveColor", 1)
+                        #print 'individualCurves', individualCurves
+                        cmds.setAttr(individualCurves+".curveColor", 1.0, 0.0, 0.0, type='double3')
+
+
+
+
 
