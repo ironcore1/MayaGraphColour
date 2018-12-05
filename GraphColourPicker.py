@@ -3,7 +3,7 @@ import maya.cmds as cmds
 removeTranslate = False
 removeRotate = False
 removeScale = False
-
+defaultControls = True
 
 #grab everything within Maya
 allScene = cmds.ls()
@@ -55,58 +55,74 @@ for eachControl in controllerNameList:
 
     #if eachControl is not empty get all animCurve types
     if len(eachControl) != 0:
+        
+
+
+
 
         #check and see if it is connected to a characterSet Node
-
         characterNodesNotSet = cmds.listConnections(eachControl, source=True, type='character')
-        characterNodesSetRemoved = set(characterNodesNotSet)
-        characterNodes = list(characterNodesSetRemoved)
-        charType = cmds.nodeType(characterNodes)
-        print type(charType)
+        
+        
+        if characterNodesNotSet != None:
+            characterNodesSetRemoved = set(characterNodesNotSet)
+            characterNodes = list(characterNodesSetRemoved)
 
-        if cmds.nodeType(characterNodes) == 'character':
+            if cmds.nodeType(characterNodes) == 'character':
 
 
-            #get connections of the controller of a character type
-            connections = cmds.listConnections(eachControl, source=True, type='character')
+                #get connections of the controller of a character type
+                connections = cmds.listConnections(eachControl, source=True, type='character')
 
-            #remove duplicate names in the list of connections
-            setConnections = set(connections)
+                #remove duplicate names in the list of connections
+                setConnections = set(connections)
 
-            #turn it back into a list so it can be itteratred upon
-            listedConnections = list(setConnections)
+                #turn it back into a list so it can be itteratred upon
+                listedConnections = list(setConnections)
 
-            #look through each character type node
-            for eachCharacterSet in listedConnections:
-
-                finalConnections = cmds.listConnections(eachCharacterSet, source=True, type='animCurve')
-
-                if finalConnections == None:
-                    pass
-                else:
-                    for individualCurves in finalConnections:
-
-                        #Enable the attribute to be true so the grapgh editor can be altered colour
-                        cmds.setAttr(individualCurves+".useCurveColor", 1)
-                        #print 'individualCurves', individualCurves
-                        cmds.setAttr(individualCurves+".curveColor", 1.0, 0.0, 0.0, type='double3')
-                        print 'it works on', eachControl
-            else:
+                #look through each character type node
                 for eachCharacterSet in listedConnections:
 
                     finalConnections = cmds.listConnections(eachCharacterSet, source=True, type='animCurve')
 
-                if finalConnections == None:
-                    pass
-                else:
-                    for individualCurves in finalConnections:
+                    if finalConnections == None:
+                        pass
+                    else:
+                        for individualCurves in finalConnections:
+
+                            #Enable the attribute to be true so the gr zapgh editor can be altered colour
+                            cmds.setAttr(individualCurves+".useCurveColor", 1)
+                            #print 'individualCurves', individualCurves
+                            cmds.setAttr(individualCurves+".curveColor", 1.0, 0.0, 0.0, type='double3')
+                            print 'it works on', eachControl
+                            
+                            
+                            
+                            
+                                
+        else:
+
+            finalConnections = cmds.listConnections(eachControl, source=True, type='animCurve')
+            listWithoutTranRotScale = []
+            
+            if finalConnections == None:
+                pass
+            else:
+                
+                ######### remove Translate, Rotate and scale from the list to change colours as I don't want this to happen #########
+                for checkTransRotScale in finalConnections:
+                    
+                    if 'translate' in checkTransRotScale or 'rotate' in checkTransRotScale and defaultControls == True :
+                        pass
+                    else:
+                        listWithoutTranRotScale.append(checkTransRotScale)
+                    
+                    for individualCurves in listWithoutTranRotScale:
 
                         #Enable the attribute to be true so the grapgh editor can be altered colour
                         cmds.setAttr(individualCurves+".useCurveColor", 1)
                         #print 'individualCurves', individualCurves
                         cmds.setAttr(individualCurves+".curveColor", 1.0, 0.0, 0.0, type='double3')
-
-
 
 
 
