@@ -8,6 +8,7 @@ allScene = cmds.ls()
 #all objects selected, check relatives to see if there is a SHAPE and place them in the allShapes varible
 allShapes = cmds.listRelatives(allScene, shapes=True)
  
+
 #grab all Nurbs in the shapes
 nurbs = cmds.ls(allShapes, type="nurbsCurve")
 
@@ -52,15 +53,15 @@ for eachControl in controllerNameList:
 
     #if eachControl is not empty get all animCurve types
     if len(eachControl) != 0:
-        
+
 
 
 
 
         #check and see if it is connected to a characterSet Node
         characterNodesNotSet = cmds.listConnections(eachControl, source=True, type='character')
-        
-        
+
+
         if characterNodesNotSet != None:
             characterNodesSetRemoved = set(characterNodesNotSet)
             characterNodes = list(characterNodesSetRemoved)
@@ -92,85 +93,78 @@ for eachControl in controllerNameList:
                             #print 'individualCurves', individualCurves
                             cmds.setAttr(individualCurves+".curveColor", 1.0, 0.0, 0.0, type='double3')
                             print 'it works on', eachControl
-                            
-                            
-                            
-                            
-                                
+
+
+
+
+
         else:
 
             finalConnections = cmds.listConnections(eachControl, source=True, type='animCurve')
             listWithoutTranRotScale = []
-            
+
             if finalConnections == None:
                 pass
             else:
-                
+
                 ######### remove Translate, Rotate and scale from the list to change colours as I don't want this to happen #########
                 for checkTransRotScale in finalConnections:
-                    
-                    if 'translate' in checkTransRotScale or 'rotate' in checkTransRotScale or checkTransRotScale in 'scale' :
+
                         #print checkTransRotScale, 'set to ', defaultControls
                         pass
                     else:
                         listWithoutTranRotScale.append(checkTransRotScale)
-                    
+
 
 
                     for idx,individualCurves in enumerate(listWithoutTranRotScale):
                         if idx == 0:
-                            
+
                             #Enable the attribute to be true so the grapgh editor can be altered colour
                             cmds.setAttr(individualCurves+".useCurveColor", isMyCodeOn)
-                            
+
                             #Colour Pale Yellow
                             cmds.setAttr(individualCurves+".curveColor", 1.0, 1.0, 0.5, type='double3')
-                            
+
                         elif idx == 1:
-                            
+
                             #Enable the attribute to be true so the grapgh editor can be altered colour
                             cmds.setAttr(individualCurves+".useCurveColor", isMyCodeOn)
-                            
+
                             #Colour Purple
                             cmds.setAttr(individualCurves+".curveColor", 1.0, 0.0, 1.0, type='double3')
-                            
+
                         elif idx == 2:
                             #Enable the attribute to be true so the grapgh editor can be altered colour
                             cmds.setAttr(individualCurves+".useCurveColor", isMyCodeOn)
-                            
+
                             #Colour Bright Orange
                             cmds.setAttr(individualCurves+".curveColor", 1.0, 0.331, 0.0, type='double3')
-                        
+
                         elif idx == 3:
                             #Enable the attribute to be true so the grapgh editor can be altered colour
                             cmds.setAttr(individualCurves+".useCurveColor", isMyCodeOn)
-                            
+
                             #Colour Pink
                             cmds.setAttr(individualCurves+".curveColor", 0.8, 0.397, 0.805, type='double3')
-                        
+
                         elif idx == 4:
                             #Enable the attribute to be true so the grapgh editor can be altered colour
                             cmds.setAttr(individualCurves+".useCurveColor", isMyCodeOn)
-                            
+
                             #Colour Pink
                             cmds.setAttr(individualCurves+".curveColor", 1.0, 0.841, 0.0, type='double3')
-                        
+
+
                         elif idx == 5:
                             #Enable the attribute to be true so the grapgh editor can be altered colour
                             cmds.setAttr(individualCurves+".useCurveColor", isMyCodeOn)
-                            
-                            #Colour pale Green
-                            cmds.setAttr(individualCurves+".curveColor", 0.636, 1.299, 0.636, type='double3')
-                        
-                        elif idx == 6:
-                            #Enable the attribute to be true so the grapgh editor can be altered colour
-                            cmds.setAttr(individualCurves+".useCurveColor", isMyCodeOn)
-                            
+
                             #Colour brown
                             cmds.setAttr(individualCurves+".curveColor", 0.610, 0.236, 0.0, type='double3')
 
-                                
-                                
+
+
 
 
 
