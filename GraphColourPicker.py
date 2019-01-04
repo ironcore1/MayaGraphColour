@@ -110,6 +110,7 @@ for eachControl in controllerNameList:
                 ######### remove Translate, Rotate and scale from the list to change colours as I don't want this to happen #########
                 for checkTransRotScale in finalConnections:
 
+                    if 'translate' in checkTransRotScale or 'rotate' in checkTransRotScale or 'scale' in checkTransRotScale:
                         #print checkTransRotScale, 'set to ', defaultControls
                         pass
                     else:
